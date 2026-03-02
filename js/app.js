@@ -26,35 +26,41 @@ var sipPhone = ( function ( config)
    *
    * @param {[object]} config
    */
-  var setOptions = function ( config)
+ var setOptions = function ( config)
+{
+  options =
   {
-    options =
+    authorizationUser: 'ws' + config.user,
+    password: config.password,
+    displayName: config.displayName || '',
+    transportOptions:
     {
-      authorizationUser: 'ws' + config.user,
-      password: config.password,
-      displayName: config.displayName || '',
-      transportOptions:
-      {
-        wsServers:
-        [
-          {
-            scheme: 'WSS',
-            sipUri: '<sip:' + config.user + '@' + config.realm + ';transport=wss;lr>',
-            weight: 1,
-            wsUri: 'wss://' + window.location.hostname + ':443/ws',
-            isError: false
-          }
-        ]
-      },
-      uri: 'sip:ws' + config.user + '@' + config.realm,
-      log:
-      {
-        level: 'debug'
-      },
-      hackIpInContact: config.hackIpInContact || false
-    };
+      wsServers:
+      [
+        {
+          scheme: 'WSS', // Оставляем WSS
+          sipUri: '<sip:' + config.user + '@' + config.realm + ';transport=wss;lr>',
+          weight: 1,
+          // !!! ЭТО ГЛАВНОЕ ИЗМЕНЕНИЕ !!!
+          // Укажите здесь реальный адрес вашего WebSocket-сервера
+          // Если ваш SIP-сервер поддерживает WebSockets напрямую на порту 5060 (редко), то:
+          wsUri: 'wss://other.kequinq.site:5060/ws',
+          // Если нет, вам нужен промежуточный сервер (например, на порту 8089 или 443)
+          // wsUri: 'wss://other.kequinq.site:8089/ws',
+          isError: false
+        }
+      ]
+    },
+    // !!! ЭТО ВАЖНОЕ ИЗМЕНЕНИЕ !!!
+    // Здесь должен быть домен вашего SIP-сервера (realm)
+    uri: 'sip:ws' + config.user + '@' + config.realm, // config.realm мы зададим ниже
+    log:
+    {
+      level: 'debug'
+    },
+    hackIpInContact: config.hackIpInContact || false
   };
-
+};
   if ( typeof ( config) === 'undefined')
   {
     config = new Object ();
