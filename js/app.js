@@ -76,7 +76,8 @@ var sipPhone = ( function ( config)
       });
     }
   }
-  $.extend ( config, { realm: 'localhost.localdomain'});
+  // ЗАМЕНИТЕ localhost.localdomain на other.kequinq.site
+$.extend ( config, { realm: 'other.kequinq.site'});
 
   setOptions ( config);
 
